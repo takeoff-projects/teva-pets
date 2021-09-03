@@ -8,9 +8,15 @@ import (
 	"os"
 )
 
-var tpl = template.Must(template.ParseFiles("index.html"))
+//var tpl = template.Must(template.ParseFiles("index.html"))
+
+
+
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+
+	var tpl = template.Must(template.ParseFiles("templates/index.html", "templates/layout.html"))
+
 	buf := &bytes.Buffer{}
 	err := tpl.Execute(buf, nil)
 	if err != nil {

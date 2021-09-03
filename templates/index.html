@@ -1,0 +1,30 @@
+{{template "layout" .}}
+
+{{define "content"}}
+<div class="container">
+    <hr />
+    <div class="row">
+        <!--Card-->
+        <div class="col-lg-4 col-md-12 mb-4">
+            <!--Card image-->
+            <div class="view overlay hm-white-slight">
+                <img src="https://storage.googleapis.com/doug-rehnstrom-pets/ff68c75b-fa80-4395-87c9-0bcdb4f3aca9.jpg"
+                    class="img-fluid" alt="">
+                <a href="https://storage.googleapis.com/doug-rehnstrom-pets/ff68c75b-fa80-4395-87c9-0bcdb4f3aca9.jpg">
+                    <div class="mask"></div>
+                </a>
+            </div>
+            <!--Card content-->
+            <div class="card-body">
+                <!--Title-->
+                <h4 class="card-title">Noir</h4>
+                <!--Text-->
+                <p class="card-text">Woof!</p>
+                <p class="card-text">Doug</p>
+                <div><span class="like" id="key">&#128077;</span></div>
+                <div><span class="like" id="like-key">Likes: 100</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
