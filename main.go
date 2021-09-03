@@ -8,10 +8,6 @@ import (
 	"os"
 )
 
-//var tpl = template.Must(template.ParseFiles("index.html"))
-
-
-
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -29,6 +25,21 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Home Page Served")
 }
 
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+
+	var tpl = template.Must(template.ParseFiles("templates/about.html", "templates/layout.html"))
+
+	buf := &bytes.Buffer{}
+	err := tpl.Execute(buf, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println(err.Error())
+		return
+	}
+
+	buf.WriteTo(w)
+	log.Println("About Page Served")
+}
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -44,6 +55,7 @@ func main() {
 	mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	// The rest of the routes
+	mux.HandleFunc("/about", aboutHandler)
 	mux.HandleFunc("/", indexHandler)
 
 	log.Printf("Webserver listening on Port: %s", port)
