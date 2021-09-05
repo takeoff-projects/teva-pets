@@ -35,8 +35,9 @@ func main() {
 	mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	// The rest of the routes
-	mux.HandleFunc("/about", aboutHandler)
 	mux.HandleFunc("/", indexHandler)
+	mux.HandleFunc("/about", aboutHandler)
+
 
 	log.Printf("Webserver listening on Port: %s", port)
 	http.ListenAndServe(":"+port, mux)
