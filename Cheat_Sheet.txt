@@ -11,3 +11,6 @@ fresh
 
 # Build with Google Cloud Build
 gcloud builds submit --tag=gcr.io/YOUR-PROJECT-ID-HERE/go-pets:v1.0 .
+
+# To Deploy, you must set the environment variable: GOOGLE_CLOUD_PROJECT equal to your project ID.
+# You also need a Datastore database in the project where you want to run the program. 
