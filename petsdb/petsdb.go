@@ -22,7 +22,7 @@ type Pet struct {
 	Likes   int       `datastore:"likes"`
 	Owner   string    `datastore:"owner"`
 	Petname string    `datastore:"petname"`
-	Name    string    // The ID used in the datastore.
+	Name    string     // The ID used in the datastore.
 }
 
 // GetPets Returns all pets from datastore ordered by likes in Desc Order
@@ -54,6 +54,5 @@ func GetPets() ([]Pet, error) {
 	}
 
 	client.Close()
-
 	return pets, nil
 }
