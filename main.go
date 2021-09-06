@@ -2,25 +2,23 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"time"
-
-	"cloud.google.com/go/datastore"
+	"drehnstrom.com/go-pets/petsdb"
 )
 
 var projectID string 
 
 func main() {
-
 	projectID = os.Getenv("GOOGLE_CLOUD_PROJECT")
 	if projectID == "" {
 		log.Fatal(`You need to set the environment variable "GOOGLE_CLOUD_PROJECT"`)
 	}
+	log.Printf("GOOGLE_CLOUD_PROJECT is set to %s", projectID)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -41,13 +39,11 @@ func main() {
 
 	log.Printf("Webserver listening on Port: %s", port)
 	http.ListenAndServe(":"+port, mux)
-
 }
 	
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	var pets []Pet
-	pets, error := GetPets()
+	var pets []petsdb.Pet
+	pets, error := petsdb.GetPets()
 	if error != nil {
 		fmt.Print(error)
 	}
@@ -90,12 +86,10 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("About Page Served")
 }
 
-
-
 // HomePageData for Index template
 type HomePageData struct {
 	PageTitle string
-	Pets []Pet
+	Pets []petsdb.Pet
 }
 
 // AboutPageData for About template
@@ -103,41 +97,3 @@ type AboutPageData struct {
 	PageTitle string
 }
 
-// Pet model stored in Datastore
-type Pet struct {
-	Added   time.Time `datastore:"added"`
-	Caption string    `datastore:"caption"`
-	Email   string    `datastore:"email"`
-	Image   string    `datastore:"image"`
-	Likes   int       `datastore:"likes"`
-	Owner   string    `datastore:"owner"`
-	Petname string    `datastore:"petname"`
-	Name    string    // The ID used in the datastore.
-}
-
-// GetPets Returns all pets from datastore ordered by likes in Desc Order
-func GetPets() ([]Pet, error) {	
-	var pets []Pet
-	ctx := context.Background()
-	client, err := datastore.NewClient(ctx, projectID)
-	if err != nil {
-		log.Fatalf("Could not create datastore client: %v", err)
-	}
-
-	// Create a query to fetch all Pet entities".
-	query := datastore.NewQuery("Pet").Order("-likes")
-	keys, err := client.GetAll(ctx, query, &pets)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	// Set the id field on each Task from the corresponding key.
-	for i, key := range keys {
-		pets[i].Name = key.Name
-	}
-
-	client.Close()
-
-	return pets, nil
-}
