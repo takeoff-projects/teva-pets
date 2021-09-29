@@ -14,3 +14,9 @@
 # Dependency directories (remove the comment below to include it)
 vendor/
 tmp/
+.idea
+.terraform.*
+firebase-debug.log
+.terraform
+*.iml
+terraform/roi-takeoff-user64.json

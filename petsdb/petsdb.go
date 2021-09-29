@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
+    "time"
 
-	"cloud.google.com/go/datastore"
+    "cloud.google.com/go/datastore"
 )
 
 var projectID string
@@ -22,10 +22,10 @@ type Pet struct {
 	Likes   int       `datastore:"likes"`
 	Owner   string    `datastore:"owner"`
 	Petname string    `datastore:"petname"`
-	Name    string     // The ID used in the datastore.
+	Name    string     // The ID used in the Datastore.
 }
 
-// GetPets Returns all pets from datastore ordered by likes in Desc Order
+// GetPets Returns all pets from Datastore ordered by likes in Desc Order
 func GetPets() ([]Pet, error) {
 
 	projectID = os.Getenv("GOOGLE_CLOUD_PROJECT")
@@ -41,7 +41,7 @@ func GetPets() ([]Pet, error) {
 	}
 
 	// Create a query to fetch all Pet entities".
-	query := datastore.NewQuery("Pet").Order("-likes")
+	query := datastore.NewQuery("Pet")//.Order("-likes")
 	keys, err := client.GetAll(ctx, query, &pets)
 	if err != nil {
 		fmt.Println(err)
