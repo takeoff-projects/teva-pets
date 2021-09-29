@@ -20,3 +20,4 @@ firebase-debug.log
 .terraform
 *.iml
 terraform/roi-takeoff-user64.json
+roi-takeoff-user64.json
