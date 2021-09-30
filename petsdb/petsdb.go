@@ -9,6 +9,7 @@ import (
     "time"
 
     "cloud.google.com/go/datastore"
+  //  "github.com/google/uuid"
 )
 
 var projectID string
@@ -25,23 +26,27 @@ type Pet struct {
 	Name    string     // The ID used in the Datastore.
 }
 
-// GetPets Returns all pets from Datastore ordered by likes in Desc Order
-func GetPets() ([]Pet, error) {
 
+func connectorDatastore()(context.Context, *datastore.Client) {
 	projectID = os.Getenv("GOOGLE_CLOUD_PROJECT")
 	if projectID == "" {
 		log.Fatal(`You need to set the environment variable "GOOGLE_CLOUD_PROJECT"`)
 	}
-
-	var pets []Pet
 	ctx := context.Background()
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Fatalf("Could not create datastore client: %v", err)
 	}
+	return ctx, client
+}
 
-	// Create a query to fetch all Pet entities".
-	query := datastore.NewQuery("Pet")//.Order("-likes")
+// GetPets Returns all pets from datastore
+func GetPets() ([]Pet, error) {
+	var pets []Pet
+	ctx, client := connectorDatastore()
+
+	// Create a query to fetch all Pet entities
+	query := datastore.NewQuery("Pet") //.Order("-likes")
 	keys, err := client.GetAll(ctx, query, &pets)
 	if err != nil {
 		fmt.Println(err)
@@ -55,4 +60,16 @@ func GetPets() ([]Pet, error) {
 
 	client.Close()
 	return pets, nil
+}
+
+func CreatePet(pet Pet){
+	ctx, client := connectorDatastore()
+	key := datastore.IncompleteKey("Pet", nil)
+	//newID := uuid.New().String()
+	//pet.Name = datastore.NameKey("Pet", "StringId", newID)
+	_, err := client.Put(ctx, key, &pet)
+	if err != nil {
+		fmt.Println(err)
+	}
+	client.Close()
 }
